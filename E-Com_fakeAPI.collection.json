@@ -1,0 +1,2663 @@
+{
+  "info": {
+    "_postman_id": "753bad40-1a1f-4f5f-8097-8c11a44c0b11",
+    "name": "E-Commerce API Testing",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "52101391",
+    "_collection_link": "https://go.postman.co/collection/52101391-753bad40-1a1f-4f5f-8097-8c11a44c0b11?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "00_Environment_Configuration",
+      "item": [
+        {
+          "name": "Login_And_Set_Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"Valid token is returned\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData.token).to.not.be.undefined;\r",
+                  "    pm.environment.set(\"token\", jsonData.token);\r",
+                  "});\r",
+                  "\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n\"username\": \"{{username}}\",\r\n\"password\": \"{{password}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://fakestoreapi.com/auth/login",
+              "protocol": "https",
+              "host": [
+                "fakestoreapi",
+                "com"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "01_Authentication_Tests",
+      "item": [
+        {
+          "name": "Negative",
+          "item": [
+            {
+              "name": "Login_Invalid_User",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 400 or 401\", function () {\r",
+                      "    pm.expect(pm.response.code).to.be.oneOf([400, 401]);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Incorrect username\", function () {\r",
+                      "    pm.expect(pm.response.text()).to.include(\"username or password is incorrect\");\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n\"username\": \"shibu\",\r\n\"password\": \"{{password}}\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "https://fakestoreapi.com/auth/login",
+                  "protocol": "https",
+                  "host": [
+                    "fakestoreapi",
+                    "com"
+                  ],
+                  "path": [
+                    "auth",
+                    "login"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Login_Missing_Password",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 400 or 401\", function () {\r",
+                      "    pm.expect(pm.response.code).to.be.oneOf([400, 401]);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Incorrect password\", function () {\r",
+                      "    pm.expect(pm.response.text()).to.include(\"username or password is incorrect\");\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n\"username\": \"{{username}}\",\r\n\"password\": \"Shibu\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "https://fakestoreapi.com/auth/login",
+                  "protocol": "https",
+                  "host": [
+                    "fakestoreapi",
+                    "com"
+                  ],
+                  "path": [
+                    "auth",
+                    "login"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Login_Empty_Body",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 400 or 401\", function () {\r",
+                      "    pm.expect(pm.response.code).to.be.oneOf([400, 401]);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"No username & password\", function () {\r",
+                      "    pm.expect(pm.response.text()).to.include(\"username and password are not provided in JSON format\");\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n\"username\": \"\",\r\n\"password\": \"\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "https://fakestoreapi.com/auth/login",
+                  "protocol": "https",
+                  "host": [
+                    "fakestoreapi",
+                    "com"
+                  ],
+                  "path": [
+                    "auth",
+                    "login"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "02_Users",
+      "item": [
+        {
+          "name": "Positive",
+          "item": [
+            {
+              "name": "Get_All_Users_and_current_user_id",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "var jsonData = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Confirm the total number of users is 10\", function () {\r",
+                      "    pm.expect(jsonData.length).to.eql(10);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Confirm user current username and get user id\", function () {\r",
+                      "    let user= jsonData.find(u => u.username == pm.environment.get(\"username\"));\r",
+                      "    pm.expect(user.id).to.be.not.undefined;\r",
+                      "    pm.environment.set(\"userid\", user.id);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "https://fakestoreapi.com/users",
+                  "protocol": "https",
+                  "host": [
+                    "fakestoreapi",
+                    "com"
+                  ],
+                  "path": [
+                    "users"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get_User_By_ID",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "https://fakestoreapi.com/users/{{userid}}",
+                  "protocol": "https",
+                  "host": [
+                    "fakestoreapi",
+                    "com"
+                  ],
+                  "path": [
+                    "users",
+                    "{{userid}}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Negative",
+          "item": [
+            {
+              "name": "Get_Invalid_User_ID",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 404\", function () {\r",
+                      "    pm.response.to.have.status(404);\r",
+                      "});\r",
+                      "\r",
+                      "var jsonData = pm.response.json();\r",
+                      "pm.test(\"Response should be null for invalid user\", function () {\r",
+                      "    pm.expect(jsonData === null || Object.keys(jsonData).length === 0).to.be.true;\r",
+                      "});\r",
+                      "\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "https://fakestoreapi.com/users/20",
+                  "protocol": "https",
+                  "host": [
+                    "fakestoreapi",
+                    "com"
+                  ],
+                  "path": [
+                    "users",
+                    "20"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get_User_Without_Token",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code 401 for unautorized access\", function () {\r",
+                      "    pm.response.to.have.status(401);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "https://fakestoreapi.com/users/{{userid}}",
+                  "protocol": "https",
+                  "host": [
+                    "fakestoreapi",
+                    "com"
+                  ],
+                  "path": [
+                    "users",
+                    "{{userid}}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "03_Product_Tests",
+      "item": [
+        {
+          "name": "Positive",
+          "item": [
+            {
+              "name": "Get_All_Products",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "var jsonData = pm.response.json();\r",
+                      "pm.test(\"Confirm all 20 product details are recieved\", function () {\r",
+                      "    pm.expect(jsonData.length).to.eql(20);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Confirm Samsung 49-Inch CHG90 is available in the list and get product id\", function () {\r",
+                      "    var product = jsonData.find(item => item.title.includes(\"Samsung 49-Inch CHG90\"));\r",
+                      "    pm.expect(product).to.be.not.undefined;\r",
+                      "    pm.expect(product.id).to.be.not.undefined;\r",
+                      "    pm.environment.set(\"productid\", product.id);\r",
+                      "    pm.environment.set(\"productname\", product.title);\r",
+                      "    pm.environment.set(\"productcategory\", product.category);\r",
+                      "});\r",
+                      "\r",
+                      "\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "https://fakestoreapi.com/products",
+                  "protocol": "https",
+                  "host": [
+                    "fakestoreapi",
+                    "com"
+                  ],
+                  "path": [
+                    "products"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get_Product_By_ID",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "var jsonData = pm.response.json();\r",
+                      "pm.test(\"Confirm the product by productid\", function () {\r",
+                      "    pm.expect(jsonData.id).to.eql(pm.environment.get(\"productid\"));\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Confirm the product by productid\", function () {\r",
+                      "    pm.expect(jsonData.title).to.eql(pm.environment.get(\"productname\"));\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Confirm the product category is correct\", function () {\r",
+                      "    pm.expect(jsonData.category).to.eql(pm.environment.get(\"productcategory\"));\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "https://fakestoreapi.com/products/{{productid}}",
+                  "protocol": "https",
+                  "host": [
+                    "fakestoreapi",
+                    "com"
+                  ],
+                  "path": [
+                    "products",
+                    "{{productid}}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Negative",
+          "item": [
+            {
+              "name": "Get_Invalid_Product_ID",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 404\", function () {\r",
+                      "    pm.response.to.have.status(404);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Response should be null or empty object for invalid product\", function () {\r",
+                      "    let responseText = pm.response.text();\r",
+                      "    let isEmpty = responseText === \"\" || responseText === \"null\";\r",
+                      "    pm.expect(isEmpty).to.be.true;\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "https://fakestoreapi.com/products/100",
+                  "protocol": "https",
+                  "host": [
+                    "fakestoreapi",
+                    "com"
+                  ],
+                  "path": [
+                    "products",
+                    "100"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get_Product_Without_Token",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Confirm unzuthorized access\", function () {\r",
+                      "    pm.response.to.have.status(401);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "https://fakestoreapi.com/products/{{productid}}",
+                  "protocol": "https",
+                  "host": [
+                    "fakestoreapi",
+                    "com"
+                  ],
+                  "path": [
+                    "products",
+                    "{{productid}}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "04_Cart_Tests",
+      "item": [
+        {
+          "name": "Positive",
+          "item": [
+            {
+              "name": "Add_To_Cart_Valid",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 201\", function () {\r",
+                      "    pm.response.to.have.status(201);\r",
+                      "});\r",
+                      "\r",
+                      "var jsonData = pm.response.json();\r",
+                      "pm.test(\"Cart is sucessfully added and recived card id\", function () {\r",
+                      "    pm.expect(jsonData).to.be.not.undefined;\r",
+                      "    pm.expect(jsonData.id).to.be.greaterThan(0);\r",
+                      "    pm.environment.set(\"cartid\", jsonData.id);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"userId\": {{userid}},\r\n  \"date\": \"{{todayDate}}\",\r\n  \"products\": [\r\n    { \"productId\": 1, \"quantity\": 1 },\r\n    { \"productId\": 3, \"quantity\": 2 },\r\n    { \"productId\": 7, \"quantity\": 1 }\r\n  ]\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "https://fakestoreapi.com/carts",
+                  "protocol": "https",
+                  "host": [
+                    "fakestoreapi",
+                    "com"
+                  ],
+                  "path": [
+                    "carts"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get_Cart_By_Card_Id",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Cart details should be returned\", function () {\r",
+                      "    try{\r",
+                      "        var jsonData = pm.response.json();\r",
+                      "    }\r",
+                      "    catch (e) {\r",
+                      "    }\r",
+                      "    pm.expect(jsonData === null || Object.keys(jsonData).length === 0).to.be.false;\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "https://fakestoreapi.com/carts/{{cartid}}",
+                  "protocol": "https",
+                  "host": [
+                    "fakestoreapi",
+                    "com"
+                  ],
+                  "path": [
+                    "carts",
+                    "{{cartid}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update_Cart_Quantity",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Cart is updated sucessfully\", function () {\r",
+                      "    var jsonData = pm.response.json();\r",
+                      "    pm.expect(jsonData.id).to.eql(pm.environment.get(\"cartid\"));\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"userId\": {{userid}},\r\n  \"date\": \"{{todayDate}}\",\r\n  \"products\": [\r\n    { \"productId\": 10, \"quantity\": 5 },\r\n    { \"productId\": 18, \"quantity\": 3 },\r\n  ]\r\n}"
+                },
+                "url": {
+                  "raw": "https://fakestoreapi.com/carts/{{cartid}}",
+                  "protocol": "https",
+                  "host": [
+                    "fakestoreapi",
+                    "com"
+                  ],
+                  "path": [
+                    "carts",
+                    "{{cartid}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete_Cart",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "https://fakestoreapi.com/carts/{{cartid}}",
+                  "protocol": "https",
+                  "host": [
+                    "fakestoreapi",
+                    "com"
+                  ],
+                  "path": [
+                    "carts",
+                    "{{cartid}}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Negative",
+          "item": [
+            {
+              "name": "Add_To_Cart_Invalid_Product",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 400\", function () {\r",
+                      "    pm.response.to.have.status(400);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Cart should not return id for invalid product\", function () {\r",
+                      "    var jsonData = pm.response.json();\r",
+                      "    pm.expect(jsonData.id).to.be.undefined;\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"userId\": {{userid}},\r\n  \"date\": \"{{todayDate}}\",\r\n  \"products\": [\r\n    { \"productId\": 100, \"quantity\": 1 }\r\n  ]\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "https://fakestoreapi.com/carts",
+                  "protocol": "https",
+                  "host": [
+                    "fakestoreapi",
+                    "com"
+                  ],
+                  "path": [
+                    "carts"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Add_To_Cart_Negative_Quantity",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 400\", function () {\r",
+                      "    pm.response.to.have.status(400);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Cart should not return id for negative quantity\", function () {\r",
+                      "    var jsonData = pm.response.json();\r",
+                      "    pm.expect(jsonData.id).to.be.undefined;\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"userId\": {{userid}},\r\n  \"date\": \"{{todayDate}}\",\r\n  \"products\": [\r\n    { \"productId\": 5, \"quantity\": -1 }\r\n  ]\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "https://fakestoreapi.com/carts",
+                  "protocol": "https",
+                  "host": [
+                    "fakestoreapi",
+                    "com"
+                  ],
+                  "path": [
+                    "carts"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Add_To_Cart_Without_Token",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code 401 for unautorized access\", function () {\r",
+                      "    pm.response.to.have.status(401);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"userId\": {{userid}},\r\n  \"date\": \"{{todayDate}}\",\r\n  \"products\": [\r\n    { \"productId\": 5, \"quantity\": 5 }\r\n  ]\r\n}"
+                },
+                "url": {
+                  "raw": "https://fakestoreapi.com/carts",
+                  "protocol": "https",
+                  "host": [
+                    "fakestoreapi",
+                    "com"
+                  ],
+                  "path": [
+                    "carts"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get_Cart_Invalid_Cart_ID",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 404\", function () {\r",
+                      "    pm.response.to.have.status(404);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"userId\": {{userid}},\r\n  \"date\": \"{{todayDate}}\",\r\n  \"products\": [\r\n    { \"productId\": 5, \"quantity\": 5 }\r\n  ]\r\n}"
+                },
+                "url": {
+                  "raw": "https://fakestoreapi.com/carts/1000",
+                  "protocol": "https",
+                  "host": [
+                    "fakestoreapi",
+                    "com"
+                  ],
+                  "path": [
+                    "carts",
+                    "1000"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "05_Order_Tests",
+      "item": [
+        {
+          "name": "Positive",
+          "item": [
+            {
+              "name": "Create_Order_Valid",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "// TODO: Documentation is incomplete for this endpoint\r",
+                      "pm.test.skip(\"TODO: To create order with cart details\", function() {\r",
+                      "    // Test logic stays here but won't execute\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "https://fakestoreapi.com/orders",
+                  "protocol": "https",
+                  "host": [
+                    "fakestoreapi",
+                    "com"
+                  ],
+                  "path": [
+                    "orders"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get_Order_By_ID",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "// TODO: Documentation is incomplete for this endpoint\r",
+                      "pm.test.skip(\"TODO: To create order with cart details\", function() {\r",
+                      "    // Test logic stays here but won't execute\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"userId\": {{userid}},\r\n  \"date\": \"{{todayDate}}\",\r\n  \"products\": [\r\n    { \"productId\": 5, \"quantity\": 5 }\r\n  ]\r\n}"
+                },
+                "url": {
+                  "raw": "https://fakestoreapi.com/orders",
+                  "protocol": "https",
+                  "host": [
+                    "fakestoreapi",
+                    "com"
+                  ],
+                  "path": [
+                    "orders"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get_All_Orders_For_User",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "// TODO: Documentation is incomplete for this endpoint\r",
+                      "pm.test.skip(\"TODO: To create order with cart details\", function() {\r",
+                      "    // Test logic stays here but won't execute\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "https://fakestoreapi.com/orders",
+                  "protocol": "https",
+                  "host": [
+                    "fakestoreapi",
+                    "com"
+                  ],
+                  "path": [
+                    "orders"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Negative",
+          "item": [
+            {
+              "name": "Create_Order_Missing_Field",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "// TODO: Documentation is incomplete for this endpoint\r",
+                      "pm.test.skip(\"TODO: To create order with cart details\", function() {\r",
+                      "    // Test logic stays here but won't execute\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "https://fakestoreapi.com/orders",
+                  "protocol": "https",
+                  "host": [
+                    "fakestoreapi",
+                    "com"
+                  ],
+                  "path": [
+                    "orders"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create_Order_Invalid_Product",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "// TODO: Documentation is incomplete for this endpoint\r",
+                      "pm.test.skip(\"TODO: To create order with cart details\", function() {\r",
+                      "    // Test logic stays here but won't execute\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "https://fakestoreapi.com/orders",
+                  "protocol": "https",
+                  "host": [
+                    "fakestoreapi",
+                    "com"
+                  ],
+                  "path": [
+                    "orders"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create_Order_Without_Token",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "// TODO: Documentation is incomplete for this endpoint\r",
+                      "pm.test(\"Status code 401 for unautorized access\", function () {\r",
+                      "    pm.response.to.have.status(401);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "https://fakestoreapi.com/orders",
+                  "protocol": "https",
+                  "host": [
+                    "fakestoreapi",
+                    "com"
+                  ],
+                  "path": [
+                    "orders"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get_Invalid_Order_ID",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "// TODO: Documentation is incomplete for this endpoint\r",
+                      "pm.test.skip(\"TODO: To create order with cart details\", function() {\r",
+                      "    // Test logic stays here but won't execute\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "https://fakestoreapi.com/orders",
+                  "protocol": "https",
+                  "host": [
+                    "fakestoreapi",
+                    "com"
+                  ],
+                  "path": [
+                    "orders"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "06_Security_Tests",
+      "item": [
+        {
+          "name": "Invalid_Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 401 for invalid token\", function () {\r",
+                  "    pm.response.to.have.status(401);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIsInVzZXIiOiJtb3JfMjMxNCIsImlhdCI6MTc3MTE4NzQ2M30.S1ExFOQfngKXkaBBXCHV057qHjgNwC1111111111111",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "https://fakestoreapi.com/products",
+              "protocol": "https",
+              "host": [
+                "fakestoreapi",
+                "com"
+              ],
+              "path": [
+                "products"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Expired_Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// expired token is not applicable as of now\r",
+                  "pm.test.skip(\"Status code is 401 for expired token\", function () {\r",
+                  "    pm.response.to.have.status(401);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIsInVzZXIiOiJtb3JfMjMxNCIsImlhdCI6MTc3MTE4NzQ2M30.S1ExFOQfngKXkaBBXCHV057qHjgNwC1111111111111",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "https://fakestoreapi.com/products",
+              "protocol": "https",
+              "host": [
+                "fakestoreapi",
+                "com"
+              ],
+              "path": [
+                "products"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "No_Token_Access",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 401 for expired token\", function () {\r",
+                  "    pm.response.to.have.status(401);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "https://fakestoreapi.com/products",
+              "protocol": "https",
+              "host": [
+                "fakestoreapi",
+                "com"
+              ],
+              "path": [
+                "products"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "SQL_Injection_Attempt",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"SQL Injection should NOT bypass authentication\", function () {\r",
+                  "    pm.expect(pm.response.code).to.not.eql(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response should contain failure message\", function () {\r",
+                  "    pm.expect(pm.response.text()).to.include(\"incorrect\");\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"username\": \"admin' OR '1'='1\",\r\n  \"password\": \"anything\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://fakestoreapi.com/auth/login",
+              "protocol": "https",
+              "host": [
+                "fakestoreapi",
+                "com"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Script_Injection_Attempt",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Response should not contain raw script tags\", function () {\r",
+                  "    const responseText = pm.response.text();\r",
+                  "    pm.expect(responseText).to.not.include(\"<script>\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"title\": \"<script>alert('XSS')</script>\",\r\n  \"price\": 10,\r\n  \"description\": \"<img src=x onerror=alert('XSS')>\",\r\n  \"image\": \"test.jpg\",\r\n  \"category\": \"electronics\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://fakestoreapi.com/products",
+              "protocol": "https",
+              "host": [
+                "fakestoreapi",
+                "com"
+              ],
+              "path": [
+                "products"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "07_Data_Validation",
+      "item": [
+        {
+          "name": "Product_Schema_Validation",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "const productSchema = {\r",
+                  "    type: \"object\",\r",
+                  "    required: [\"id\", \"title\", \"price\", \"description\", \"category\", \"image\"],\r",
+                  "    properties: {\r",
+                  "        id: { type: \"number\" },\r",
+                  "        title: { type: \"string\" },\r",
+                  "        price: { type: \"number\" },\r",
+                  "        description: { type: \"string\" },\r",
+                  "        category: { type: \"string\" },\r",
+                  "        image: { type: \"string\" }\r",
+                  "    }\r",
+                  "};\r",
+                  "\r",
+                  "pm.test(\"Product schema is valid\", function () {\r",
+                  "    pm.response.to.have.jsonSchema(productSchema);\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://fakestoreapi.com/products/1",
+              "protocol": "https",
+              "host": [
+                "fakestoreapi",
+                "com"
+              ],
+              "path": [
+                "products",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cart_Schema_Validation",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "const cartSchema = {\r",
+                  "    type: \"object\",\r",
+                  "    required: [\"id\", \"userId\", \"date\", \"products\"],\r",
+                  "    properties: {\r",
+                  "        id: { type: \"number\" },\r",
+                  "        userId: { type: \"number\" },\r",
+                  "        date: { type: \"string\" },\r",
+                  "        products: {\r",
+                  "            type: \"array\",\r",
+                  "            items: {\r",
+                  "                type: \"object\",\r",
+                  "                required: [\"productId\", \"quantity\"],\r",
+                  "                properties: {\r",
+                  "                    productId: { type: \"number\" },\r",
+                  "                    quantity: { type: \"number\" }\r",
+                  "                }\r",
+                  "            }\r",
+                  "        }\r",
+                  "    }\r",
+                  "};\r",
+                  "\r",
+                  "pm.test(\"Cart schema is valid\", function () {\r",
+                  "    pm.response.to.have.jsonSchema(cartSchema);\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://fakestoreapi.com/carts/1",
+              "protocol": "https",
+              "host": [
+                "fakestoreapi",
+                "com"
+              ],
+              "path": [
+                "carts",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Order_Schema_Validation",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// TODO: Documentation is incomplete for this endpoint\r",
+                  "pm.test.skip(\"TODO: To create order with cart details\", function() {\r",
+                  "    // Test logic stays here but won't execute\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://fakestoreapi.com/products",
+              "protocol": "https",
+              "host": [
+                "fakestoreapi",
+                "com"
+              ],
+              "path": [
+                "products"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Header_Validation",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Content-Type header is application/json\", function () {\r",
+                  "    pm.expect(pm.response.headers.get(\"Content-Type\"))\r",
+                  "        .to.include(\"application/json\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Server header exists\", function () {\r",
+                  "    pm.expect(pm.response.headers.has(\"Server\")).to.be.true;\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://fakestoreapi.com/products/1",
+              "protocol": "https",
+              "host": [
+                "fakestoreapi",
+                "com"
+              ],
+              "path": [
+                "products",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "08_Advanced_Tests",
+      "item": [
+        {
+          "name": "Random_Product_Test",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "// Generate random product ID between 1–20\r",
+                  "let randomId = Math.floor(Math.random() * 20) + 1;\r",
+                  "pm.environment.set(\"randomProductId\", randomId);\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Returned product ID matches requested ID\", function () {\r",
+                  "    pm.expect(jsonData.id).to.eql(parseInt(pm.environment.get(\"randomProductId\")));\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Product has required fields\", function () {\r",
+                  "    pm.expect(jsonData.title).to.be.a(\"string\");\r",
+                  "    pm.expect(jsonData.price).to.be.a(\"number\");\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://fakestoreapi.com/products/{{randomProductId}}",
+              "protocol": "https",
+              "host": [
+                "fakestoreapi",
+                "com"
+              ],
+              "path": [
+                "products",
+                "{{randomProductId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Data_Driven_Login_Test",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code check\", function () {\r",
+                  "    pm.expect(pm.response.code).to.be.oneOf([201, 401]);\r",
+                  "});\r",
+                  "\r",
+                  "if (pm.response.code === 201) {\r",
+                  "    const jsonData = pm.response.json();\r",
+                  "\r",
+                  "    pm.test(\"Token should be returned\", function () {\r",
+                  "        pm.expect(jsonData.token).to.exist;\r",
+                  "    });\r",
+                  "} else {\r",
+                  "    pm.test(\"Invalid login should return error\", function () {\r",
+                  "        pm.expect(pm.response.text()).to.include(\"incorrect\");\r",
+                  "    });\r",
+                  "}\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"username\": \"{{username}}\",\r\n  \"password\": \"{{password}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://fakestoreapi.com/auth/login",
+              "protocol": "https",
+              "host": [
+                "fakestoreapi",
+                "com"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "09_E2E_Flow_Tests",
+      "item": [
+        {
+          "name": "Complete_Order_Flow",
+          "item": [
+            {
+              "name": "01_Login",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Login successful\", function () {\r",
+                      "    pm.response.to.have.status(201);\r",
+                      "});\r",
+                      "\r",
+                      "const jsonData = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Token received\", function () {\r",
+                      "    pm.expect(jsonData.token).to.exist;\r",
+                      "});\r",
+                      "\r",
+                      "// Save token for next requests\r",
+                      "pm.environment.set(\"authToken\", jsonData.token);\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"username\": \"mor_2314\",\r\n  \"password\": \"83r5^_\"\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "https://fakestoreapi.com/auth/login",
+                  "protocol": "https",
+                  "host": [
+                    "fakestoreapi",
+                    "com"
+                  ],
+                  "path": [
+                    "auth",
+                    "login"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "02_Create_Cart",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Cart created successfully\", function () {\r",
+                      "    pm.response.to.have.status(201);\r",
+                      "});\r",
+                      "\r",
+                      "const jsonData = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Cart ID generated\", function () {\r",
+                      "    pm.expect(jsonData.id).to.be.a(\"number\");\r",
+                      "});\r",
+                      "\r",
+                      "pm.environment.set(\"cartid\", jsonData.id);\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"userId\": 1,\r\n  \"date\": \"2026-02-16\",\r\n  \"products\": [\r\n    { \"productId\": 1, \"quantity\": 1 }\r\n  ]\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "https://fakestoreapi.com/carts",
+                  "protocol": "https",
+                  "host": [
+                    "fakestoreapi",
+                    "com"
+                  ],
+                  "path": [
+                    "carts"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "03_Get_Cart",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Cart fetched successfully\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "const jsonData = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Returned cart ID matches\", function () {\r",
+                      "    pm.expect(jsonData.id).to.eql(parseInt(pm.environment.get(\"cartId\")));\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "https://fakestoreapi.com/carts/{{cartid}}",
+                  "protocol": "https",
+                  "host": [
+                    "fakestoreapi",
+                    "com"
+                  ],
+                  "path": [
+                    "carts",
+                    "{{cartid}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "04_Make_Order",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test.skip(\"Order creation skipped - endpoint not available in API\", function () {});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"userId\": 1,\r\n  \"date\": \"2026-02-16\",\r\n  \"products\": [\r\n    { \"productId\": 1, \"quantity\": 1 }\r\n  ]\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "https://fakestoreapi.com/carts",
+                  "protocol": "https",
+                  "host": [
+                    "fakestoreapi",
+                    "com"
+                  ],
+                  "path": [
+                    "carts"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "05_Delete_Cart",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Cart deleted\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "https://fakestoreapi.com/carts/{{cartid}}",
+                  "protocol": "https",
+                  "host": [
+                    "fakestoreapi",
+                    "com"
+                  ],
+                  "path": [
+                    "carts",
+                    "{{cartid}}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Multiple_Product_Order_Flow",
+          "item": [
+            {
+              "name": "01_Create_Multi_Cart",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Bulk cart created\", function () {\r",
+                      "    pm.response.to.have.status(201);\r",
+                      "});\r",
+                      "\r",
+                      "const jsonData = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Bulk cart ID generated\", function () {\r",
+                      "    pm.expect(jsonData.id).to.be.a(\"number\");\r",
+                      "});\r",
+                      "\r",
+                      "pm.environment.set(\"multiCartId\", jsonData.id);\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"userId\": 1,\r\n  \"date\": \"2026-02-16\",\r\n  \"products\": [\r\n    { \"productId\": 1, \"quantity\": 1 },\r\n    { \"productId\": 2, \"quantity\": 2 },\r\n    { \"productId\": 3, \"quantity\": 1 }\r\n  ]\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "https://fakestoreapi.com/carts/",
+                  "protocol": "https",
+                  "host": [
+                    "fakestoreapi",
+                    "com"
+                  ],
+                  "path": [
+                    "carts",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "02_Get_Multi_Cart",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Bulk cart fetched\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "const jsonData = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Cart contains 3 products\", function () {\r",
+                      "    pm.expect(jsonData.products.length).to.eql(3);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "https://fakestoreapi.com/carts/{{multiCartId}}",
+                  "protocol": "https",
+                  "host": [
+                    "fakestoreapi",
+                    "com"
+                  ],
+                  "path": [
+                    "carts",
+                    "{{multiCartId}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "03_Delete_Multi_Cart",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Multi cart deleted\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "https://fakestoreapi.com/carts/{{multiCartId}}",
+                  "protocol": "https",
+                  "host": [
+                    "fakestoreapi",
+                    "com"
+                  ],
+                  "path": [
+                    "carts",
+                    "{{multiCartId}}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          "let today = new Date();\r",
+          "// Format as YYYY-MM-DD\r",
+          "let formattedDate = today.toISOString().split('T')[0];\r",
+          "// Save to environment variable\r",
+          "pm.environment.set(\"todayDate\", formattedDate);\r",
+          "// Optional: Log to Postman Console\r",
+          "console.log(\"Today's date:\", formattedDate);\r",
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          "pm.test(\"Response time is under 1000ms\", function () {\r",
+          "    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+          "});\r",
+          "\r",
+          ""
+        ]
+      }
+    }
+  ]
+}
